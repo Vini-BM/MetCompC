@@ -16,17 +16,17 @@ function ftcsImplicit(f,IA,ti,tf,dt=0.1)
     t = ti # initializes time
     while t < tf # loop
         t+=dt # increase time
-        f*=IA # ftcs discretization
+        f = IA*f # ftcs discretization
         # Extreme values are treated as boundary conditions
     end
-    #return f -> not necessary because f is global
+    return f #-> not necessary because f is global
 end
 
 # Parameters
 L = 100 # xmax
 x = [i for i in 0:L] # space interval
 tf_list = [0, 25, 50, 75, 100] # time interval
-k = 0.5 # k = D dt/dx^2 (k<=0.5 for FTCS), D: diffusion coefficient
+k = 0.3 # k = D dt/dx^2 (k<=0.5 for FTCS), D: diffusion coefficient
 f0 = 1 # initial condition
 
 # Initialization
@@ -37,6 +37,8 @@ IA = inv(A) # inverse matrix
 f = zeros(L+1) # initializes \rho as zeros
 f[1] = f0 # sets initial condition [1, 0, ... , 0]
 plot(x,f,label="t=0",dpi=1000)
+#display(A)
+#display(f)
 
 
 # Integration
@@ -46,8 +48,8 @@ plot(x,f,label="t=0",dpi=1000)
 #    #@time ftcs(ρ,ti,tf)
 #    plot!(ρ,label="t=$tf",dpi=1000)
 #end
-ftcsImplicit(f,IA,0,500)
-plot(x,f,dpi=1000)
+f = ftcsImplicit(f,IA,0,50)
+plot!(x,f,dpi=1000)
 
 # Plot
 plot!(legend=:bottomright)
