@@ -1,11 +1,11 @@
 # Vinícius Müller
 # 26/03/2024
 
-# Testing the stability of FTCS method
+# Testing the stability of explicit FTCS method
 # Diffusion equation
-# Source at x=0: \rho(0,t)=1
-# Drain at x=L: \rho(L,t)=0
-# Initial condition: \rho(x>0,t=0)=0
+# Source at x=0: f(0,t)=1
+# Drain at x=L: f(L,t)=0
+# Initial condition: f(x>0,t=0)=0
 
 using Plots
 Plots.default(show = true)
@@ -29,24 +29,21 @@ println(x)
 tf = 20 # time interval
 k_list = [.3, .5, .7, .9] # parameter to be tested
 plot_list = []
-ρ0 = 1 # initial condition
 
 # Initialization
-ρ0 = zeros(L+1) # initializes \rho as zeros
-ρ0[1] = 1 # sets initial condition [1, 0, ... , 0]
-println(ρ0)
+f0 = zeros(L+1) # initializes f as zeros
+f0[1] = 1 # sets initial condition [1, 0, ... , 0]
 
 # Integration
 for i=1:length(k_list)
     k = k_list[i]
-    ρ = ftcs(ρ0,tf,k)
-    println(ρ)
-    push!(plot_list,plot(x,ρ,title="k=$k",legend=false,color=i,dpi=1000))
+    f = ftcs(f0,tf,k)
+    push!(plot_list,plot(x,f,title="k=$k",legend=false,color=i,dpi=1000))
 end
 
 # Plot
-plot!(plot_list...,plot_title="FTCS stability | t=$tf")
+plot!(plot_list...,plot_title="Diffusion (Explicit FTCS stability) | t=$tf")
 xlabel!("x")
-ylabel!("ρ")
+ylabel!("f")
 readline() # keep plot open
-savefig("Plots/ftcs_stability.png")
+savefig("Plots/ftcsStability.png")
