@@ -12,41 +12,50 @@ Plots.default(show = true)
 gr() # backend for Plots
 
 # Method
-function ftcsImplicit(f,IA,ti,tf,bc0=1,bcL=0,dt=0.1)
+function ftcsImplicit(f,IA,k,ti,tf,bc0=1,bcL=0,dt=0.1)
     t = ti # initializes time
     while t < tf # loop
-        t+=dt # increase time
+        t += dt # increase time
+        f[1] += k*bc0 # boundary condition
+        f[end] += k*bcL # boundary condition
         f = IA*f # ftcs discretization
-        f[1] = bc0 # boundary condition
-        f[end] = bcL # boundary condition
         # Extreme values are treated as boundary conditions
+        # It is necessary to add k*BC to 2nd and L-1th elements
     end
-    return f #-> not necessary because f is global
+    return f
 end
 
 # Parameters
 L = 100 # xmax
-x = [i for i in 0:L] # space interval
-tf_list = [25*i for i in 0:6] # time interval
 k = 0.5 # k = D dt/dx^2 (k<=0.5 for FTCS), D: diffusion coefficient
-f0 = 1 # initial condition
+bc0 = 1 # boundary condition
+bcL = 0 # boundary condition
+
 
 # Initialization
-subd = [-k for i in 0:L-1]
-diag = [1+2k for i in 0:L]
+
+## space, time, f
+x = [i for i in 1:L] # space interval
+tf_list = [25*i for i in 0:6] # time interval
+f = zeros(L-2) # initializes f as zeros from 2nd element to L-1th element --> length(x) - 2
+
+## Matrix
+subd = [-k for i in 1:L-3] # subdiagonal = upperdiagonal --> L-3 elements
+diag = [1+2k for i in 1:L-2] # diagonal --> L-2 elements
 A = Tridiagonal(subd,diag,subd) # matrix
 IA = inv(A) # inverse matrix
-f = zeros(L+1) # initializes f as zeros
 
-f[1] = f0 # sets initial condition [1, 0, ... , 0]
-plot(x,f,label="t=0",dpi=1000) # plot initial condition
+## Plot
+plot(x,vcat(bc0,f,0),label="t=0",dpi=1000) # plot initial condition
+
 
 # Integration
 for i in 2:lastindex(tf_list)
     tf = tf_list[i]
     ti = tf_list[i-1]
-    global f = ftcsImplicit(f,IA,ti,tf) # didn't work without method returning f
-    plot!(x,f,dpi=1000,label="t=$tf")
+    global f = ftcsImplicit(f,IA,k,ti,tf)
+    full_f = vcat(bc0,f,bcL) # add BC to f
+    plot!(x,full_f,dpi=1000,label="t=$tf")
 end
 
 

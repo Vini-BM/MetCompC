@@ -23,13 +23,13 @@ end
 
 # Parameters
 L = 100 # xmax
-x = [i for i in 0:L] # space interval
+x = [i for i in 1:L] # space interval
 tf_list = [25*i for i in 0:6] # time interval
 k = 0.5 # k = D dt/dx^2 (k<=0.5 for FTCS), D: diffusion coefficient
 f0 = 1 # initial condition
 
 # Initialization
-f = zeros(L+1) # initializes f as zeros
+f = zeros(L) # initializes f as zeros
 f[1] = f0 # sets initial condition [1, 0, ... , 0]
 plot!(x,f,label="t=0",dpi=1000)
 
