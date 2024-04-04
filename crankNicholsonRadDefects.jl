@@ -27,7 +27,7 @@ plot(x,f,label="t=0",dpi=1000) # plot initial condition
 # Gaussian source
 s0 = 2 # amplitude
 sigma = 2 # variance
-center = L/2 # center of gaussian
+center = L/3 # center of gaussian
 s = zeros(L) # initialize array
 @. s = s0*exp(-(x-center)^2 / 2sigma^2) # broadcasting
 
@@ -37,6 +37,7 @@ s = zeros(L) # initialize array
 diagPlus = [2+2k+S*dt for i in 1:L]
 updiagPlus = [-k for i in 1:L-1]
 A = Tridiagonal(updiagPlus,diagPlus,updiagPlus)
+A = convert(Matrix,A)
 A[1,L] = -k
 A[L,1] = -k
 IA = inv(A)
@@ -45,6 +46,7 @@ IA = inv(A)
 diag = [2-2k-S*dt for i in 1:L]
 updiag = [k for i in 1:L-1]
 B = Tridiagonal(updiag,diag,updiag)
+B = convert(Matrix,B)
 B[1,L] = k
 B[L,1] = k
 
