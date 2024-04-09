@@ -1,7 +1,7 @@
 # Vinícius Müller
 # 04/04/2024
 
-# Solving the diffusion equation with Crank-Nicholson method
+# Solving the diffusion equation with Crank-Nicolson method
 # Radiation defects on material: f_t = Df_{xx} - Sf + s(x)
 # Defect source: s(x) = s_0 exp[-(x-L/2)²/2\sigma] -> gaussian
 # Drain S
@@ -17,7 +17,7 @@ L = 100 # xmax
 dt = .1 # timestep
 tf = 50 # integration time
 S = .2 # amplitude of drain
-k = .5
+k = .5 # integration step
 
 # Initialization
 x = collect(1:1:L) # x array
@@ -65,8 +65,8 @@ f = cn(f,IA,B,s,0,tf,dt)
 
 # Plot
 plot!(x,f,label="t=$tf",dpi=1000)
-title!("Radiation Defects (Crank-Nicholson)")
+title!("Radiation Defects (Crank-Nicolson)")
 xlabel!("x")
 ylabel!("f")
 readline() # keep plot open
-#savefig("Plots/cnRadDefects.png")
+savefig("Plots/cnRadDefects.png")
