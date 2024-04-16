@@ -13,16 +13,17 @@ function overRelax(f,alpha,tol,bcL,bcR,lambda1,lambda2)
     x = collect(1:1:L) # x array
     t = 0 # timestep
     diff = 0 # loop control
-    #while abs(diff) < tol # condition based on tolerance
-    while t < 100
+    while abs(diff) < tol # condition based on tolerance
+    #while t < 10
+        lastf = deepcopy(f) # copy of f
         t += 1
-        lastf = copy(f) # copy of f
-        f[2:end-1,2:end-1] = -alpha*f[2:end-1,2:end-1] + (1+alpha)/4 * (f[3:end,2:end-1] + f[1:end-2,2:end-1] + f[2:end-1,3:end] + f[2:end-1,1:end-2]) # update f
+        f[2:end-1,2:end-1] = -alpha*lastf[2:end-1,2:end-1] + (1+alpha)/4 * (lastf[3:end,2:end-1] + f[1:end-2,2:end-1] + lastf[2:end-1,3:end] + f[2:end-1,1:end-2]) # update f
         @. f[L,1:end] = bcR # right boundary condition
         @. f[1,1:end] = bcL # left boundary condition
         @. f[1:end,1] = exp(-lambda1*x) # bottom boundary condition
         @. f[1:end,end] = exp(-lambda2*x) # top boundary condition
         diff = maximum(abs.(f)) - maximum(abs.(lastf))
+        println(diff)
     end
     println(diff)
     return f, x, t
@@ -35,7 +36,7 @@ l1 = .1
 l2 = .3
 bcL = 10
 bcR = 0
-tol = 10^(-4)
+tol = .001
 alpha = .4
 #f = rand(Float64,(L,L))
 f = ones(L,L)
