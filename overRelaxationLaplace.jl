@@ -1,51 +1,53 @@
-# Vinícius Müller
-# 10/04/2024
+# @ Vinícius Müller
+# 10-04-2024
+
+# Implements the "Over-Relaxation Method" for the Laplace equation
+# Last updated: 18-04-2024
+## Shows gif
 
 using Plots
-#susing PlotlyJS
-#using LinearAlgebra
 Plots.default(show=true)
 
-
 # Method: Simple Over-Relaxation
-function overRelax(f,alpha,tol,bcL,bcR,lambda1,lambda2)
+function overRelax(f,alpha,tol)
     L = size(f)[1] # length of x array
-    x = collect(1:1:L) # x array
     t = 0 # timestep
-    diff = 0 # loop control
-    while abs(diff) < tol # condition based on tolerance
-    #while t < 10
+    iterate = true # loop control
+    while iterate # condition based on tolerance
         lastf = deepcopy(f) # copy of f
-        t += 1
-        f[2:end-1,2:end-1] = -alpha*lastf[2:end-1,2:end-1] + (1+alpha)/4 * (lastf[3:end,2:end-1] + f[1:end-2,2:end-1] + lastf[2:end-1,3:end] + f[2:end-1,1:end-2]) # update f
-        @. f[L,1:end] = bcR # right boundary condition
-        @. f[1,1:end] = bcL # left boundary condition
-        @. f[1:end,1] = exp(-lambda1*x) # bottom boundary condition
-        @. f[1:end,end] = exp(-lambda2*x) # top boundary condition
-        diff = maximum(abs.(f)) - maximum(abs.(lastf))
-        println(diff)
+        t += 1 # update time
+        for i in 2:L-1, j in 2:L-1 # loop through space
+            f[i,j] = -alpha*lastf[i,j] + (1+alpha) * (f[i-1,j] + lastf[i+1,j] + f[i,j-1] + f[i,j+1]) / 4 # update f
+        end
+        # Fixed boundary conditions
+        global diff = maximum(abs.(f-lastf))
+        if abs(diff) < tol
+            iterate = false
+            println("Difference = $diff")
+        end
+        heatmap(f, title="Thermal equilibrium ($t iterations)", xlabel="x", ylabel="y", colorbar_title="Temperature")
     end
-    println(diff)
-    return f, x, t
+    return f, t
 end
 
 # Initialization
-
-L = 50
-l1 = .1
-l2 = .3
-bcL = 10
-bcR = 0
-tol = .001
-alpha = .4
-#f = rand(Float64,(L,L))
-f = ones(L,L)
+## Parameters
+L = 100 # size
+l1 = .1 # left exponent
+l2 = .5 # right exponent
+bcT = 0 # top BC
+bcB = 1 # bottom BC
+tol = .00001 # tolerance
+alpha = .7 # method coefficient
+x = collect(1:1:L) # x array
+## Function
+f = 10*rand(Float64,(L,L)) # random initial condition
+@. f[end,1:end] = bcT # top
+@. f[1,1:end] = bcB # bottom
+@. f[1:end,1] = exp(-l1*x) # left
+@. f[1:end,end] = exp(-l2*x) # right
 
 # Loop
-g, x, itertime = overRelax(f,alpha,tol,bcL,bcR,l1,l2)
+g, itertime = overRelax(f,alpha,tol)
 println("Iteration time = $itertime")
-#println(g)
-
-# Plot
-heatmap(x,x,g)
 readline()
