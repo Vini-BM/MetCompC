@@ -22,17 +22,19 @@ function func(f, g, tf, dt, dx)
         #g[1] = 0
         #g[end] = 0
         t += dt
-        plot([x,x],[real(f),imag(f)],ylim=(ymin,ymax))
+        plot([x,x],[real(f),imag(f)],ylim=(ymin,ymax),title="$dx")
         #plot([x,x],[abs2.(f),abs.(g)],ylim=(0,ymax))
     end
     return f, g
 end
 
 # Parameters
-L = 200
-x = collect(1:1:L)
-dt = .1
+xmax = 100
 dx = .5
+x = collect(1:dx:xmax)
+L = length(x)
+dt = .1
+#dxlist = [0.5,1,1.5]
 t = 0
 
 # Gaussian source
@@ -51,8 +53,13 @@ g = complex(g)
 #plot!(x,g)
 
 
-tf = 5
+tf = 15
 f, g = func(f,g,tf,dt,dx)
+#for dx in dxlist
+#f0 = copy(f)
+#g0 = copy(g)
+#ff, gf = func(f0,g0,tf,dt,dx)
+#end
 #plot!(x,real(f))
 #readline()
 
