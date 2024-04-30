@@ -1,0 +1,4 @@
+name = "MolecularDynamics"
+uuid = "d58702bc-6750-42b3-acb6-1e03cf20b69f"
+authors = ["Vini-BM <vinicius.bayne@ufrgs.br>"]
+version = "0.1.0"

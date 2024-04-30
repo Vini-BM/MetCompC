@@ -1,9 +1,7 @@
 using Distributions
 using Plots
 
-function inicia(N,temp)
-    X = 10
-    Y = 10
+function randomSetup(X,Y,N,temp)
     N = Int(N)
     dt = 0.1
     x = X*rand(N)
