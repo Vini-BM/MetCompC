@@ -11,11 +11,11 @@ Plots.default(show=true)
 function func(f, g, v, vsc, tf, dt, dx)
     t = 0
     ymin = 0
-    ymax = .5
+    ymax = 1
     pf = abs2.(f)
     pfint = sum(pf)*dx
     pg = abs2.(g)
-    plot([x,x,x],[pf,pg,real(vsc)],ylim=(ymin,ymax),title="t=$t | $pfint")
+    plot([x,x,x],[pf,pg,real(v)],ylim=(ymin,ymax),title="t=$t | $pfint")
     while t<tf
         oldf = deepcopy(f)
         oldg = deepcopy(g)
@@ -29,7 +29,7 @@ function func(f, g, v, vsc, tf, dt, dx)
         pf = abs2.(f)
         pg = abs2.(g)
         pfint = sum(pf)*dx
-        plot([x,x,x],[pf,pg,real(vsc)],ylim=(ymin,ymax),title="t=$t | $pfint")
+        plot([x,x,x],[pf,pg,real(v)],ylim=(ymin,ymax),title="t=$t | $pfint")
         #plot([x,x],[abs2.(f),abs.(g)],ylim=(0,ymax))
     end
     return f, g
@@ -40,13 +40,13 @@ xmax = 200
 dx = 1
 x = collect(1:dx:xmax)
 L = length(x)
-dt = .1
+dt = .01
 #dxlist = [0.5,1,1.5]
 t = 0
 
 # Gaussian source
 sigma = 6 # std
-center = L/2 # center of gaussian
+center = xmax/3 # center of gaussian
 f = zeros(L) # initialize array
 @. f = exp(-(x-center)^2 / 2sigma^2) # broadcasting
 f = complex(f)
@@ -55,18 +55,19 @@ f = complex(f)
 g = zeros(L)
 g = complex(g)
 # v
+#vsc = x .^(-1)
 vsc = zeros(L)
-vsc[110] =  50
-vsc[90] = 50
 vsc = complex(vsc)
 v = zeros(L)
+v[55] = 50
+v[65] = 50
 v = complex(v)
 # Plot
 #plot(x,real(f))
 #plot!(x,g)
 
 
-tf = 30
+tf = 50
 f, g = func(f,g,v,vsc,tf,dt,dx)
 #for dx in dxlist
 #f0 = copy(f)
