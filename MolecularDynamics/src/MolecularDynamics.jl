@@ -1,5 +1,17 @@
 module MolecularDynamics
 
-greet() = print("Hello World!")
+using Plots
+using Printf
+using LaTeXStrings
+using Distributions
+using Random
+using LinearAlgebra
 
-end # module MolecularDynamics
+export Setup, General, THP, Plotting
+
+include("setup.jl")
+include("general.jl")
+include("truncHarmonicPotential.jl")
+include("plotting.jl")
+
+end # module

@@ -51,18 +51,18 @@ end
 """
 
 function positionDiff(N,x,y)
-     diff_x = x .- x' # matrix with delta x for each pair of particles
-     diff_y = y .- y' # same for y
-     diff_r = sqrt.(diff_x .^2 + diff_y .^2) # r^2 = x^2 + y^2
-     diff_r += Diagonal(ones(N)) # distances will be used on division --> cannot divide by zero
-     return diff_x,diff_y,diff_r
+    diff_x = x .- x' # matrix with delta x for each pair of particles
+    diff_y = y .- y' # same for y
+    diff_r = sqrt.(diff_x .^2 + diff_y .^2) # r^2 = x^2 + y^2
+    diff_r += Diagonal(ones(N)) # distances will be used on division --> cannot divide by zero
+    return diff_x,diff_y,diff_r
 end
 
 function boundary(X,Y,x,y,vx,vy)
-     zx = findall(t->(t<0)||(t>X),x) # indices of particles outside of box on x axis
-     vx[zx] *= -1 # reverse velocity
-     zy = findall(t->(t<0)||(t>Y),y) # same for y
-     vy[zy] *= -1
+    zx = findall(t->(t<0)||(t>X),x) # indices of particles outside of box on x axis
+    vx[zx] *= -1 # reverse velocity
+    zy = findall(t->(t<0)||(t>Y),y) # same for y
+    vy[zy] *= -1
     return vx,vy
 end
 
