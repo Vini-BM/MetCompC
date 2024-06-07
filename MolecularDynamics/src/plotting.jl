@@ -40,7 +40,7 @@ function frame(size,positions,time,colors,Km,K,V,potential_label)
     global p=scatter(x,y,title=title,c=colors,ms=5,legend=false) # scatter particles
 
     # Annotations
-    [annotate!(x, y+.1, Plots.text(string(i),12)) for (i,x,y) in zip(1:N,x,y)] # annotate particle labels
+    [annotate!(x, y+.2, Plots.text(string(i),8)) for (i,x,y) in zip(1:N,x,y)] # annotate particle labels
 
     # Limits
     plot!(p,xlimits=(0,X),ylimits=(0,Y))
