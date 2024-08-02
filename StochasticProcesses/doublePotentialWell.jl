@@ -33,12 +33,20 @@ end
 
 
 # Parameters
-tmax = 5 # integration time
+tmax = 10 # integration time
 dt = .01 # integration  timestep
-alpha = 2 # potential parameter
-beta = 1 # noise
 x0 = 6. # initial position
+paramslist = [[2,1],[2,3],[2,5]] # alpha (potential parameter) and beta (noise)
 
-tlist, xlist = integrate(x0,tmax,dt,alpha,beta)
-plot(tlist,xlist,xlabel="t",ylabel="x",title="Particle in double potential well",display=true)
+# Loop on parameters
+for params in paramslist
+    alpha, beta = params
+    # Integration
+    tlist, xlist = integrate(x0,tmax,dt,alpha,beta)
+    global p = plot!(tlist,xlist,label="alpha=$alpha, beta=$beta")
+end
+
+# Plot
+p = plot!(xlabel="t",ylabel="x",title="Particle in double potential well")
+display(p)
 readline()
