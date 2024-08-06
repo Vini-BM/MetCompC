@@ -23,7 +23,7 @@ integral_counter = 0
 for j in 1:intervals_g
     dWg = 0
     for k in 1:10
-        dWp = sqrt_dtp * (randn(1)[1] + 1)
+        dWp = sqrt_dtp * (randn(0))
         dWg += dWp
         global integral_counter += Wp^2 * dWp + Wp*dtp
         global Wp += dWp
