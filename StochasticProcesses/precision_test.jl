@@ -1,7 +1,6 @@
 using Random
 using Plots
-
-
+Plots.default(show=true)
 
 function integrate(tmax,dt_big,m=10)
     # Parameters
@@ -23,7 +22,7 @@ function integrate(tmax,dt_big,m=10)
     for j in 1:intervals
         dW_big = 0 # Wiener differential
         for k in 1:m # small interval
-            dW_small = sqrt_dtp * (randn(0)) # gaussian noise
+            dW_small = sqrt_dt_small * randn() # gaussian noise
             dW_big += dW_small # update differential with big dt 
             # update integral inside interval
             integral_counter += W_small^2 * dW_small + W_small*dt_small 
@@ -38,6 +37,8 @@ function integrate(tmax,dt_big,m=10)
 end
 
 # Numerical
+tmax = 10
+dt_big = 0.1
 m = 10
 t, W, int_small, int_big = integrate(tmax,dt_big,m)
 
@@ -48,4 +49,4 @@ int_ito = W.^3 / 3
 plot!(t,int_ito,label="Analytic")
 plot!(t,int_small,label="Small dt")
 plot!(t,int_big,label="Big dt")
-readline()
+#readline()

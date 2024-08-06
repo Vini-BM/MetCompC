@@ -1,24 +1,25 @@
 using Random
 using Plots
 
-function func()
 tmax = 10
 dt = 0.01
 w0 = 1
 beta = 0.05
-b2 = beta^2/2
-sqrtdt = sqrt(dt)
-
-num_floor = floor(Int,tmax/dt)
-num = num_floor + 1
-xi = zeros(num)
-yi = zeros(num)
-xe = zeros(num)
-ye = zeros(num)
-xe[1] = 1.
-xi[1] = 1.
-dW = sqrtdt*randn(num_floor)
-W = 0
+function integrate(w0,beta,tmax,dt)
+    b2 = beta^2/2
+    sqrtdt = sqrt(dt)
+    num_floor = floor(Int,tmax/dt)
+    num = num_floor + 1
+    x_ito = zeros(num)
+    y_ito = zeros(num)
+    x_strat = zeros(num)
+    y_strat = zeros(num)
+    x = zeros(num)
+    y = zeros(num)
+    x[1] = 1.
+    x_ito[1] = 1.
+    dW = sqrtdt*randn(num_floor)
+    W = 0
 
 for j in 1:num_floor
     W += dW[j]
