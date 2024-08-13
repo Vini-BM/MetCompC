@@ -17,15 +17,18 @@ function ornst_uhl(x0,tmax,dt,k,beta)
     return t, x
 end
 
-function mean_ou(N::Int,x0,tmax,dt,k,beta)
-    tlist = []
-    xlist = []
-    for i in N
-        t, x = ornst_uhl(x0,tmax,dt,k,beta)
-        push!(tlist,t)
-        push!(xlist,x)
+function fokker_planck(p0,L,tmax,dt,k,beta)
+    D = beta^2
+    t = 0
+    g = []
+    p = copy(p0)
+    x = collect(1:1:L) - Int(L/2)
+    while t <= tmax
+        g[i] = p[i] + ((x[i+1]*p[i+1] - x[i-1]*p[i-1])*k/2 + (p[i+1] + p[i-1] - 2*p[i])*D/2)*dt
+        t += dt
+        p = copy(g)
     end
-    
+    return x,p
 end
 
 x0 = 1
@@ -34,6 +37,7 @@ beta = 2.0
 k = 1
 tmax = 10
 
-t,x = ornst_uhl(x0,tmax,dt,k,beta)
-plot(t,x,display=true)
+#t,x = ornst_uhl(x0,tmax,dt,k,beta)
+#plot(t,x,display=true)
+
 readline()
